@@ -1,0 +1,69 @@
+@page "/adults"
+
+@using FamiliesManager.Models
+@using FamiliesManager.Data
+
+@inject IAdultService AdultService
+
+<h3>Adults</h3>
+
+@if (allAdults == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else if (!allAdults.Any())
+{
+    <p>
+        <em>List is empty. Please add some data.</em>
+    </p>
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Age</th>
+            <th>Sex</th>
+            <th>Weight</th>
+            <th>Height</th>
+            <th>Hair Color</th>
+            <th>Eye Color</th>
+            <th>Job Title</th>
+            <th>Salary</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var adult in allAdults)
+        {
+            <tr>
+                <td>@adult.Id</td>
+                <td>@adult.FirstName</td>
+                <td>@adult.LastName</td>
+                <td>@adult.Age</td>
+                <td>@adult.Sex</td>
+                <td>@adult.Weight</td>
+                <td>@adult.Height</td>
+                <td>@adult.HairColor</td>
+                <td>@adult.EyeColor</td>
+                <td>@adult.JobTitle.JobTitle</td>
+                <td>@adult.JobTitle.Salary</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IList<Adult> allAdults;
+
+    protected override async Task OnInitializedAsync()
+    {
+        allAdults = AdultService.ReadAll();
+    }
+
+}

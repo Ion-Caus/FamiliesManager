@@ -1,5 +1,7 @@
-namespace Models {
-public class Adult : Person {
-    public Job JobTitle { get; set; }
-}
+namespace FamiliesManager.Models
+{
+    public class Adult : Person
+    {
+        public Job JobTitle { get; set; }
+    }
 }
