@@ -34,6 +34,7 @@ else
 
     private void SaveChanges()
     {
+        AdultService.Update(adultToEdit);
         NavigationManager.NavigateTo("/adults");
     }
 

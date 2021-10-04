@@ -9,14 +9,29 @@
 <h3>The adults</h3>
 <hr/>
 
-@if (allAdults == null)
+<div class="row p-3">
+    <div class="col-4">
+        Filter by UserId :
+        <input class="form-control form-control-md" type="number" @oninput="@(FilterById)"/>
+    </div>
+    <div class="col-4">
+        Filter by Name :
+        <input class="form-control form-control-md" type="text" @oninput="@(FilterByName)"/>
+    </div>
+    <div class="col-4">
+        Filter by Job Title :
+        <input class="form-control form-control-md" type="text" @oninput="@(FilterByJobTitle)"/>
+    </div>
+</div>
+
+@if (shownAdults == null)
 {
     <p>
         <em>Loading...</em>
     </p>
     <div class="spinner"></div>
 }
-else if (!allAdults.Any())
+else if (!shownAdults.Any())
 {
     <p>
         <em>List is empty. Please add some data.</em>
@@ -25,35 +40,45 @@ else if (!allAdults.Any())
 else
 {
     <div class="row">
-        @foreach (var adult in allAdults)
+        @foreach (var adult in shownAdults)
         {
             <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-                <div class="card h-100 text-center">
-                    <div class="card-header">
-                        <h3>@adult.FirstName @adult.LastName</h3>
-                    </div>
-                    <div class="card-body">
-                        <label class="text-muted"> Personal Information </label>
-                        <p class="card-text"><strong>ID:</strong> @adult.Id</p>
-                        <p class="card-text"><strong>Age:</strong> @adult.Age</p>
-                        <p class="card-text"><strong>Sex:</strong> @adult.Sex</p>
-                        <p class="card-text"><strong>Eye color:</strong> @adult.EyeColor</p>
-                        <p class="card-text"><strong>Hair color:</strong> @adult.HairColor</p>
-                        <p class="card-text"><strong>Weigth:</strong> @adult.Weight kg</p>
-                        <p class="card-text"><strong>Heigth:</strong> @adult.Height cm</p>
-                        <hr/>
-                        <label class="text-muted"> Job</label>
-                        <h5 class="card-title">@adult.JobTitle.JobTitle</h5>
-                        <p class="card-text"><strong>Salary:</strong> @adult.JobTitle.Salary dkk/month</p>
-                    </div>
-                    <div class="card-footer">
-                        <button @onclick="@(() => Remove(adult.Id))" >
-                            <i class="oi oi-trash" style="color: firebrick"></i>
-                        </button>
-                        <button @onclick="@(() => Edit(adult.Id))">
-                            <i class="oi oi-pencil" style="color: #1b6ec2"></i>
-                        </button>
-                    
+                <div class="card text-center">
+                    <div class="member-card">
+                        <span class="float-left m-3 text-secondary position-absolute">#@adult.Id</span>
+                        <div class="card-header p-3">
+                            <span class="rounded-circle oi oi-person" style="font-size: 50px;"></span>
+                            <h4>@adult.FirstName @adult.LastName</h4>
+                            <p class="text-muted">
+                                @if (adult.Sex.Equals("M"))
+                                {
+                                    <span>Male </span>
+                                }
+                                else
+                                {
+                                    <span>Female </span>
+                                }
+                                @adult.Age
+                            </p>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title">@adult.JobTitle.JobTitle</h3>
+                            <p class="card-text"><span class="font-weight-light">Salary:</span> @adult.JobTitle.Salary dkk/month</p>
+
+                            <hr/>
+                            <label class="text-muted"> Personal Information </label>
+                            <p class="m-0">@adult.Weight kg | @adult.Height cm</p>
+                            <p class=" m-0"><span class="font-weight-light">Eyes:</span> @adult.EyeColor | <span class="font-weight-light">Hair:</span> @adult.HairColor</p>
+                        </div>
+                        <div class="card-footer">
+                            <button @onclick="@(() => Remove(adult.Id))">
+                                <i class="oi oi-trash" style="color: firebrick"></i>
+                            </button>
+                            <button @onclick="@(() => Edit(adult.Id))">
+                                <i class="oi oi-pencil" style="color: #1b6ec2"></i>
+                            </button>
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -63,14 +88,66 @@ else
 
 @code {
     private IList<Adult> allAdults;
+    private IList<Adult> shownAdults;
+
+
+    private int? filterById;
+    private string filterByName;
+    private string filterByJobTitle;
     
+    private void FilterById(ChangeEventArgs evt)
+    {
+        filterById = null;
+        try
+        {
+            if (evt.Value != null) 
+                filterById = int.Parse(evt.Value.ToString() ?? string.Empty);
+        }
+        catch (Exception) {}
+        
+        ExecuteFilter();
+    }
+    
+    private void FilterByName(ChangeEventArgs evt)
+    {
+        filterByName = null;
+        if (evt.Value != null && evt.Value?.ToString() != "")
+        {
+            filterByName = evt.Value?.ToString();
+        }
+        Console.WriteLine(filterByName);
+        
+        ExecuteFilter();
+    }
+    
+    private void FilterByJobTitle(ChangeEventArgs evt)
+    {
+        filterByJobTitle = null;
+        if (evt.Value != null && evt.Value?.ToString() != "")
+        {
+            filterByJobTitle = evt.Value?.ToString();
+        }
+        Console.WriteLine(filterByJobTitle);
+        ExecuteFilter();
+    }
+
+    private void ExecuteFilter()
+    {
+        shownAdults = allAdults.Where(adult =>
+            (filterById != null && adult.Id == filterById || filterById == null) &&
+            (filterByName != null && (adult.LastName.ToLower().StartsWith(filterByName.ToLower()) || adult.FirstName.ToLower().StartsWith(filterByName.ToLower())) || filterByName == null) &&
+            (filterByJobTitle != null && adult.JobTitle.JobTitle.ToLower().StartsWith(filterByJobTitle.ToLower()) || filterByJobTitle == null)
+            ).ToList();
+    }
+
     private void Remove(int id)
     {
         Adult toRemove = allAdults.First(ad => ad.Id == id);
         allAdults.Remove(toRemove);
+        shownAdults.Remove(toRemove);
         AdultService.Delete(id);
     }
-    
+
     private void Edit(int id)
     {
         NavigationManager.NavigateTo($"Edit/{id}");
@@ -79,6 +156,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         allAdults = AdultService.ReadAll();
+        shownAdults = allAdults;
     }
 
 }
