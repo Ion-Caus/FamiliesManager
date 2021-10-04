@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FamiliesManager.Models;
@@ -8,7 +9,7 @@ namespace FamiliesManager.Data
     public class AdultService : IAdultService
     {
         private FileContext fileContext;
-        private readonly IList<Adult> adults;
+        private IList<Adult> adults;
 
         public AdultService(FileContext fileContext)
         {
@@ -18,6 +19,17 @@ namespace FamiliesManager.Data
         
         public void Create(Adult adult)
         {
+            int max;
+            try
+            {
+                max = adults.Max(ad => ad.Id);
+            }
+            catch (InvalidOperationException)
+            {
+                max = 1;
+            }
+            
+            adult.Id += ++max;
             adults.Add(adult);
             fileContext.SaveChanges();
         }
@@ -29,8 +41,8 @@ namespace FamiliesManager.Data
 
         public IList<Adult> ReadAll()
         {
-            fileContext.SaveChanges();
-            return adults;
+            // return a copy
+            return new List<Adult>(adults);
         }
 
         public void Update(Adult adult)

@@ -22,10 +22,8 @@ namespace FamiliesManager.Persistence
 
         private IList<T> ReadData<T>(string s)
         {
-            using (var jsonReader = File.OpenText(s))
-            {
-                return JsonSerializer.Deserialize<List<T>>(jsonReader.ReadToEnd());
-            }
+            using var jsonReader = File.OpenText(s);
+            return JsonSerializer.Deserialize<List<T>>(jsonReader.ReadToEnd());
         }
 
         public void SaveChanges()
@@ -45,10 +43,8 @@ namespace FamiliesManager.Persistence
             {
                 WriteIndented = true
             });
-            using (StreamWriter outputFile = new StreamWriter(adultsFile, false))
-            {
-                outputFile.Write(jsonAdults);
-            }
+            using StreamWriter outputFile = new StreamWriter(adultsFile, false);
+            outputFile.Write(jsonAdults);
         }
     }
 }

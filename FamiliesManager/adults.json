@@ -1,21 +1,6 @@
 [
   {
     "JobTitle": {
-      "JobTitle": "Mascot",
-      "Salary": 99821
-    },
-    "Id": 0,
-    "FirstName": "Yasmine",
-    "LastName": "Baxter",
-    "HairColor": "Black",
-    "EyeColor": "Brown",
-    "Age": 58,
-    "Weight": 39.8,
-    "Height": 174,
-    "Sex": "F"
-  },
-  {
-    "JobTitle": {
       "JobTitle": "Front End Web Developer",
       "Salary": 66408
     },
@@ -27,21 +12,6 @@
     "Age": 36,
     "Weight": 64.8,
     "Height": 147,
-    "Sex": "F"
-  },
-  {
-    "JobTitle": {
-      "JobTitle": "Business Development Manager",
-      "Salary": 71456
-    },
-    "Id": 2,
-    "FirstName": "Samara",
-    "LastName": "Humphrey",
-    "HairColor": "Black",
-    "EyeColor": "Brown",
-    "Age": 34,
-    "Weight": 37,
-    "Height": 145,
     "Sex": "F"
   },
   {
@@ -151,21 +121,6 @@
   },
   {
     "JobTitle": {
-      "JobTitle": "Casino Host",
-      "Salary": 35445
-    },
-    "Id": 10,
-    "FirstName": "Lester",
-    "LastName": "Cruz",
-    "HairColor": "White",
-    "EyeColor": "Amber",
-    "Age": 39,
-    "Weight": 126.2,
-    "Height": 179,
-    "Sex": "M"
-  },
-  {
-    "JobTitle": {
       "JobTitle": "Nurse",
       "Salary": 36813
     },
@@ -222,6 +177,21 @@
     "Age": 44,
     "Weight": 81.8,
     "Height": 172,
+    "Sex": "M"
+  },
+  {
+    "JobTitle": {
+      "JobTitle": "Software Engineer",
+      "Salary": 45000
+    },
+    "Id": 15,
+    "FirstName": "Ion",
+    "LastName": "Caus",
+    "HairColor": "Brown",
+    "EyeColor": "Green",
+    "Age": 20,
+    "Weight": 65,
+    "Height": 185,
     "Sex": "M"
   }
 ]

@@ -4,6 +4,7 @@
 @using FamiliesManager.Data
 
 @inject IAdultService AdultService
+@inject NavigationManager NavigationManager
 
 <h3>Adults</h3>
 
@@ -12,6 +13,7 @@
     <p>
         <em>Loading...</em>
     </p>
+    <div class="spinner"></div>
 }
 else if (!allAdults.Any())
 {
@@ -21,45 +23,57 @@ else if (!allAdults.Any())
 }
 else
 {
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Age</th>
-            <th>Sex</th>
-            <th>Weight</th>
-            <th>Height</th>
-            <th>Hair Color</th>
-            <th>Eye Color</th>
-            <th>Job Title</th>
-            <th>Salary</th>
-        </tr>
-        </thead>
-        <tbody>
+    <div class="row">
         @foreach (var adult in allAdults)
         {
-            <tr>
-                <td>@adult.Id</td>
-                <td>@adult.FirstName</td>
-                <td>@adult.LastName</td>
-                <td>@adult.Age</td>
-                <td>@adult.Sex</td>
-                <td>@adult.Weight</td>
-                <td>@adult.Height</td>
-                <td>@adult.HairColor</td>
-                <td>@adult.EyeColor</td>
-                <td>@adult.JobTitle.JobTitle</td>
-                <td>@adult.JobTitle.Salary</td>
-            </tr>
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                <div class="card h-100 text-center">
+                    <div class="card-header">
+                        <h3>@adult.FirstName @adult.LastName</h3>
+                    </div>
+                    <div class="card-body">
+                        <label class="text-muted"> Personal Information </label>
+                        <p class="card-text"><strong>ID:</strong> @adult.Id</p>
+                        <p class="card-text"><strong>Age:</strong> @adult.Age</p>
+                        <p class="card-text"><strong>Sex:</strong> @adult.Sex</p>
+                        <p class="card-text"><strong>Eye color:</strong> @adult.EyeColor</p>
+                        <p class="card-text"><strong>Hair color:</strong> @adult.HairColor</p>
+                        <p class="card-text"><strong>Weigth:</strong> @adult.Weight kg</p>
+                        <p class="card-text"><strong>Heigth:</strong> @adult.Height cm</p>
+                        <hr/>
+                        <label class="text-muted"> Job</label>
+                        <h5 class="card-title">@adult.JobTitle.JobTitle</h5>
+                        <p class="card-text"><strong>Salary:</strong> @adult.JobTitle.Salary dkk/month</p>
+                    </div>
+                    <div class="card-footer">
+                        <button @onclick="@(() => Remove(adult.Id))" >
+                            <i class="oi oi-trash" style="color: firebrick"></i>
+                        </button>
+                        <button @onclick="@(() => Edit(adult.Id))">
+                            <i class="oi oi-pencil" style="color: #1b6ec2"></i>
+                        </button>
+                    
+                    </div>
+                </div>
+            </div>
         }
-        </tbody>
-    </table>
+    </div>
 }
 
 @code {
     private IList<Adult> allAdults;
+    
+    private void Remove(int id)
+    {
+        Adult toRemove = allAdults.First(ad => ad.Id == id);
+        allAdults.Remove(toRemove);
+        AdultService.Delete(id);
+    }
+    
+    private void Edit(int id)
+    {
+        NavigationManager.NavigateTo($"Edit/{id}");
+    }
 
     protected override async Task OnInitializedAsync()
     {
