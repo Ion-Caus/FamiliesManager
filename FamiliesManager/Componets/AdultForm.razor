@@ -1,0 +1,134 @@
+@using FamiliesManager.Models
+
+<EditForm Model="@Adult" OnValidSubmit="@SubmitHandler">
+    <div class="card card-registration card-registration-2 m-3" style="border-radius: 15px;">
+        <div class="card-body p-0">
+            <div class="row g-0">
+                <div class="col-lg-6">
+                    <div class="p-5">
+                        <h3 class="mb-5">General Infomation</h3>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4 pb-2">
+                                <div class="form-outline">
+                                    First Name: <br/>
+                                    <InputText class="form-control form-control-md" @bind-Value="Adult.FirstName"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4 pb-2">
+                                <div class="form-outline">
+                                    Last Name: <br/>
+                                    <InputText class="form-control form-control-md" @bind-Value="Adult.LastName"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4 pb-2">
+                                <div class="form-outline">
+                                    Age:<br/>
+                                    <InputNumber class="form-control" @bind-Value="Adult.Age"/>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-4 pb-2">
+                                Sex: <br/>
+                                <select class="custom-select" @bind="Adult.Sex">
+                                    <option selected value="M">Male</option>
+                                    <option value="F">Female</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 pb-2">
+                            <div class="form-outline">
+                                Job Title: <br/>
+                                <InputText class="form-control form-control-md" @bind-Value="Adult.JobTitle.JobTitle"/>
+                            </div>
+                        </div>
+
+                        <DataAnnotationsValidator/>
+                        <ValidationSummary/>
+
+                    </div>
+                </div>
+
+                <div class="col-lg-6 bg-dark text-white">
+                    <div class="p-5">
+                        <h3 class="mb-5">More Details</h3>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4 pb-2">
+                                <div class="form-outline">
+                                    Weight: (kg) <br/>
+                                    <InputNumber class="form-control form-control-md" @bind-Value="Adult.Weight"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4 pb-2">
+                                <div class="form-outline">
+                                    Height: (cm) <br/>
+                                    <InputNumber class="form-control form-control-md" @bind-Value="Adult.Height"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4 pb-2">
+                                Eyecolor: <br/>
+                                <select class="custom-select" @bind="Adult.EyeColor">
+                                    <option>Amber</option>
+                                    <option>Blue</option>
+                                    <option selected>Brown</option>
+                                    <option>Gray</option>
+                                    <option>Green</option>
+                                    <option>Hazel</option>
+                                    <option>Red</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-4 pb-2">
+                                Hair color: <br/>
+                                <select class="custom-select" @bind="Adult.HairColor">
+                                    <option selected>Brown</option>
+                                    <option>Black</option>
+                                    <option>Blond</option>
+                                    <option>Blue</option>
+                                    <option>Green</option>
+                                    <option>Orange</option>
+                                    <option>Red</option>
+                                    <option>Pink</option>
+                                    <option>Purple</option>
+                                    <option>Sandy</option>
+                                    <option>White</option>
+                                    <option>Bald</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-6 pb-2">
+                            <div class="form-outline" style="width: 150px">
+                                Salary: (dkk/month)<br/>
+                                <InputNumber class="form-control" @bind-Value="Adult.JobTitle.Salary"/>
+                            </div>
+                        </div>
+
+                        <p class="action float-right">
+                            <button class="btn btn-outline-light mt-lg-4 mb-lg-4" type="submit">Submit</button>
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@functions {
+    [Parameter]
+    public Adult Adult { get; set; }
+
+    [Parameter]
+    public EventCallback SubmitHandler { get; set; }
+}

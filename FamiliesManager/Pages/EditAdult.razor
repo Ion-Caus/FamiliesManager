@@ -1,0 +1,40 @@
+@page "/edit/{Id:int}"
+
+@using FamiliesManager.Data
+@using FamiliesManager.Models
+@using FamiliesManager.Componets
+
+@inject IAdultService AdultService
+@inject NavigationManager NavigationManager
+
+@if (adultToEdit == null)
+{
+    <em>Adult not found!</em>
+}
+else
+{
+    <h3>Editing infomration about @adultToEdit.FirstName @adultToEdit.LastName</h3>
+    <hr/>
+
+    <AdultForm Adult="@adultToEdit" 
+               SubmitHandler="@SaveChanges"/>
+}
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private Adult adultToEdit;
+
+    protected override async Task OnInitializedAsync()
+    {
+        adultToEdit = AdultService.Read(Id);
+    }
+
+    private void SaveChanges()
+    {
+        NavigationManager.NavigateTo("/adults");
+    }
+
+}

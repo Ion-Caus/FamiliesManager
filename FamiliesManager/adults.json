@@ -193,5 +193,20 @@
     "Weight": 65,
     "Height": 185,
     "Sex": "M"
+  },
+  {
+    "JobTitle": {
+      "JobTitle": "Student",
+      "Salary": 20000
+    },
+    "Id": 16,
+    "FirstName": "Eugen",
+    "LastName": "Caus",
+    "HairColor": "Black",
+    "EyeColor": "Hazel",
+    "Age": 20,
+    "Weight": 100,
+    "Height": 170,
+    "Sex": "M"
   }
 ]
