@@ -1,7 +1,125 @@
 @page "/Charts"
 @attribute [Authorize(Policy = "MustBeManagerOrAdmin")]
+
+@using ChartJs.Blazor.PieChart
+@using ChartJs.Blazor.Common
+@using ChartJs.Blazor.Util
+@using FamiliesManager.Models
+@using FamiliesManager.Data
+
+@inject IAdultService AdultService
+
 <h3>Charts</h3>
+<hr/>
+
+<div class="row">
+    <div class="col-6">
+        <div>
+            <Chart Config="pieGenderConfig"/>
+        </div>
+    </div>
+    <div class="col-6">
+        <div>
+            <Chart Config="pieEyeColorConfig"/>
+        </div>
+    </div>
+</div>
+
+
 
 @code {
-    
+    private PieConfig pieGenderConfig;
+    private PieConfig pieEyeColorConfig;
+
+    private IList<Adult> allAdults;
+
+    private int NumberOfFemale => allAdults.Count(adult => adult.Sex.Equals("F"));
+    private int NumberOfMale => allAdults.Count - NumberOfFemale;
+
+    private int[] EyeColorNumbers
+    {
+        get
+        {
+            return new[]
+            {
+                allAdults.Count(adult => adult.EyeColor.Equals("Amber")),
+                allAdults.Count(adult => adult.EyeColor.Equals("Blue")),
+                allAdults.Count(adult => adult.EyeColor.Equals("Brown")),
+                allAdults.Count(adult => adult.EyeColor.Equals("Gray")),
+                allAdults.Count(adult => adult.EyeColor.Equals("Green")),
+                allAdults.Count(adult => adult.EyeColor.Equals("Hazel")),
+                allAdults.Count(adult => adult.EyeColor.Equals("Red")),
+            };
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        allAdults = AdultService.ReadAll();
+        ConfigureGenderPieConfig();
+        ConfigureEyeColorPieConfig();
+    }
+
+    private void ConfigureGenderPieConfig()
+    {
+        pieGenderConfig = new PieConfig
+        {
+            Options = new PieOptions
+            {
+                Responsive = true,
+                Title = new OptionsTitle
+                {
+                    Display = true,
+                    Text = "Gender PieChart"
+                }
+            }
+        };
+        pieGenderConfig.Data.Labels.Add("Male");
+        pieGenderConfig.Data.Labels.Add("Female");
+
+        PieDataset<int> dataset = new(new[] {NumberOfMale, NumberOfFemale})
+        {
+            BackgroundColor = new[]
+            {
+                ColorUtil.ColorHexString(82, 168, 212),
+                ColorUtil.ColorHexString(169, 63, 117)
+            }
+        };
+        pieGenderConfig.Data.Datasets.Add(dataset);
+    }
+
+    private void ConfigureEyeColorPieConfig()
+    {
+        pieEyeColorConfig = new PieConfig
+        {
+            Options = new PieOptions
+            {
+                Responsive = true,
+                Title = new OptionsTitle
+                {
+                    Display = true,
+                    Text = "Eye Color PieChart"
+                }
+            }
+        };
+        foreach (var color in new[] {"Amber", "Blue", "Brown", "Gray", "Green", "Hazel", "Red"})
+        {
+            pieEyeColorConfig.Data.Labels.Add(color);
+        }
+
+        PieDataset<int> dataset = new(EyeColorNumbers)
+        {
+            BackgroundColor = new[]
+            {
+                ColorUtil.ColorHexString(100, 75, 0),
+                ColorUtil.ColorHexString(37, 150, 190),
+                ColorUtil.ColorHexString(132, 59, 11),
+                ColorUtil.ColorHexString(118, 142, 152),
+                ColorUtil.ColorHexString(100, 189, 109),
+                ColorUtil.ColorHexString(65, 77, 73),
+                ColorUtil.ColorHexString(221, 17, 85)
+            }
+        };
+        pieEyeColorConfig.Data.Datasets.Add(dataset);
+    }
 }

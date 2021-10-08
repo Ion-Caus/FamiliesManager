@@ -16,21 +16,6 @@
   },
   {
     "JobTitle": {
-      "JobTitle": "Skin Care Specialist",
-      "Salary": 20545
-    },
-    "Id": 3,
-    "FirstName": "Chaya",
-    "LastName": "Mcclure",
-    "HairColor": "Black",
-    "EyeColor": "Brown",
-    "Age": 59,
-    "Weight": 32.4,
-    "Height": 167,
-    "Sex": "F"
-  },
-  {
-    "JobTitle": {
       "JobTitle": "Vice Principal",
       "Salary": 72901
     },
