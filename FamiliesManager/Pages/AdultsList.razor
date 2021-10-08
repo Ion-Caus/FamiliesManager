@@ -11,7 +11,7 @@
 
 <div class="row p-3">
     <div class="col-4">
-        Filter by UserId :
+        Filter by Id :
         <input class="form-control form-control-md" type="number" @oninput="@(FilterById)"/>
     </div>
     <div class="col-4">
@@ -29,7 +29,6 @@
     <p>
         <em>Loading...</em>
     </p>
-    <div class="spinner"></div>
 }
 else if (!shownAdults.Any())
 {
@@ -71,13 +70,16 @@ else
                             <p class=" m-0"><span class="font-weight-light">Eyes:</span> @adult.EyeColor | <span class="font-weight-light">Hair:</span> @adult.HairColor</p>
                         </div>
                         <div class="card-footer">
-                            <button @onclick="@(() => Remove(adult.Id))">
-                                <i class="oi oi-trash" style="color: firebrick"></i>
-                            </button>
-                            <button @onclick="@(() => Edit(adult.Id))">
-                                <i class="oi oi-pencil" style="color: #1b6ec2"></i>
-                            </button>
-
+                            <AuthorizeView Policy="MustBeAdmin">
+                                <button @onclick="@(() => Remove(adult.Id))">
+                                    <i class="oi oi-trash" style="color: firebrick"></i>
+                                </button>
+                            </AuthorizeView>
+                            <AuthorizeView Policy="MustBeManagerOrAdmin">
+                                <button @onclick="@(() => Edit(adult.Id))">
+                                    <i class="oi oi-pencil" style="color: #1b6ec2"></i>
+                                </button>
+                            </AuthorizeView>
                         </div>
                     </div>
                 </div>
@@ -94,20 +96,22 @@ else
     private int? filterById;
     private string filterByName;
     private string filterByJobTitle;
-    
+
     private void FilterById(ChangeEventArgs evt)
     {
         filterById = null;
         try
         {
-            if (evt.Value != null) 
+            if (evt.Value != null)
                 filterById = int.Parse(evt.Value.ToString() ?? string.Empty);
         }
-        catch (Exception) {}
-        
+        catch (Exception)
+        {
+        }
+
         ExecuteFilter();
     }
-    
+
     private void FilterByName(ChangeEventArgs evt)
     {
         filterByName = null;
@@ -115,11 +119,10 @@ else
         {
             filterByName = evt.Value?.ToString();
         }
-        Console.WriteLine(filterByName);
-        
+
         ExecuteFilter();
     }
-    
+
     private void FilterByJobTitle(ChangeEventArgs evt)
     {
         filterByJobTitle = null;

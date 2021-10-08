@@ -1,0 +1,14 @@
+1) Can add new adult 
+    --> if is logged in. ==> MustBeLoggedIn
+    
+2) Can delete an adult
+    --> if is admin. ==> MustBeAdmin
+
+3) Can view all adults
+    --> everyone. 
+    
+4) Can view the charts
+    --> if is manager or admin. ==> MustBeManagerOrAdmin
+    
+5) Can edit an adult
+    --> if is manager or admin. ==> MustBeManagerOrAdmin

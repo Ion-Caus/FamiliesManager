@@ -1,6 +1,8 @@
+using FamiliesManager.Authentication;
 using FamiliesManager.Data;
 using FamiliesManager.Persistence;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +27,28 @@ namespace FamiliesManager
             services.AddServerSideBlazor();
             services.AddSingleton<FileContext>();
             services.AddSingleton<IAdultService, AdultService>();
+            services.AddScoped<IUserService, InMemoryUserService>();
+            services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+
+            services.AddAuthorization(option =>
+            {
+                option.AddPolicy("MustBeAdmin", builder =>
+                {
+                    builder.RequireAuthenticatedUser().RequireClaim("Role", "Admin");
+                });
+                
+                option.AddPolicy("MustBeLoggedIn", builder =>
+                {
+                    builder.RequireAuthenticatedUser();
+                });
+                
+                option.AddPolicy("MustBeManagerOrAdmin", builder =>
+                {
+                    builder.RequireAuthenticatedUser().RequireClaim("Role", "Admin", "Manager");;
+                });
+
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

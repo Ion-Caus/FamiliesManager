@@ -1,4 +1,9 @@
+@using FamiliesManager.Pages
 @inherits LayoutComponentBase
+
+@using FamiliesManager.Authentication
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 
 <div class="page">
     <div class="sidebar">
@@ -7,7 +12,14 @@
 
     <div class="main">
         <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <AuthorizeView>
+                <NotAuthorized>
+                    <button class="btn btn-outline-dark" @onclick="Login">Go to Login</button>
+                </NotAuthorized>
+                <Authorized>
+                    <button class="btn btn-outline-dark" @onclick="PerformLogout">Log out</button>
+                </Authorized>
+            </AuthorizeView>
         </div>
 
         <div class="content px-4">
@@ -15,3 +27,37 @@
         </div>
     </div>
 </div>
+
+@code
+{
+    [CascadingParameter]
+    protected Task<AuthenticationState> AuthStat { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        var user = (await AuthStat).User;
+        if (!user.Identity.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo($"/Login");
+        }
+    }
+
+    private void Login()
+    {
+        NavigationManager.NavigateTo("/Login");
+    }
+
+    private async Task PerformLogout()
+    {
+        try
+        {
+            ((CustomAuthenticationStateProvider) AuthenticationStateProvider).Logout();
+            NavigationManager.NavigateTo("/Login");
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
+    }
+}

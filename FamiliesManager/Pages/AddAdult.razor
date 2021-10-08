@@ -1,4 +1,5 @@
 @page "/addAdult"
+@attribute [Authorize(Policy = "MustBeLoggedIn")]
 
 @using FamiliesManager.Data
 @using FamiliesManager.Models

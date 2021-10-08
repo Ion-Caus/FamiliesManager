@@ -1,0 +1,66 @@
+@page "/login"
+@using FamiliesManager.Authentication
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<AuthorizeView>
+    <NotAuthorized>
+        <div class="card m-3" style="border-radius: 15px;">
+            <div class="card-body p-10">
+                <div class="form-group">
+                    <label>Username:</label>
+                    <input class="form-control form-control-md" type="text" placeholder="username" @bind-value="username"  style="width: 200px;"/>
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input class="form-control form-control-md" type="password" placeholder="password" @bind-value="password" style="width: 200px;"/>
+                </div>
+                <button class="btn btn-outline-dark" @onclick="PerformLogin">Login</button>
+                <div style="color:red">@errorMessage</div>
+            </div>
+        </div>
+    </NotAuthorized>
+    <Authorized>
+        <button class="btn btn-outline-dark" @onclick="PerformLogout">Log out</button>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private string username;
+    private string password;
+    private string errorMessage;
+
+    private async Task PerformLogin()
+    {
+        errorMessage = "";
+        try
+        {
+            ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(username, password);
+            username = "";
+            password = "";
+            NavigationManager.NavigateTo("/");
+        }
+        catch (Exception e)
+        {
+            errorMessage = e.Message;
+        }
+    }
+
+    private async Task PerformLogout()
+    {
+        errorMessage = "";
+        username = "";
+        password = "";
+        try
+        {
+            ((CustomAuthenticationStateProvider) AuthenticationStateProvider).Logout();
+            NavigationManager.NavigateTo("/");
+        }
+        catch (Exception)
+        {
+    // ignored
+        }
+    }
+
+}
