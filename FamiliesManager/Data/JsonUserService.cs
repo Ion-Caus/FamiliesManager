@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using FamiliesManager.Models;
 
 namespace FamiliesManager.Data
@@ -8,10 +10,32 @@ namespace FamiliesManager.Data
     public class InMemoryUserService : IUserService
     {
         private List<User> users;
+        private string usersFile = "users.json";
         
         public InMemoryUserService()
         {
-            users = new[]
+            if (!File.Exists(usersFile))
+            {
+                GenerateDefaultUsers();
+                WriteUsersToJson();
+                
+            }
+            else
+            {
+                string content = File.ReadAllText(usersFile);
+                users = JsonSerializer.Deserialize<List<User>>(content);
+            }
+        }
+        
+        private void WriteUsersToJson()
+        {
+            string todosAsJson = JsonSerializer.Serialize(users);
+            File.WriteAllText(usersFile, todosAsJson);
+        }
+
+        private void GenerateDefaultUsers()
+        {
+            User[] defaultUsers =
             {
                 new User
                 {
@@ -31,7 +55,8 @@ namespace FamiliesManager.Data
                     Password = "Mktoday1",
                     Role = "User"
                 }
-            }.ToList();
+            };
+            users = defaultUsers.ToList();
         }
         
 

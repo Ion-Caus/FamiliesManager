@@ -10,7 +10,7 @@
     "HairColor": "Black",
     "EyeColor": "Brown",
     "Age": 36,
-    "Weight": 71.8,
+    "Weight": 80,
     "Height": 147,
     "Sex": "F"
   },
@@ -23,7 +23,7 @@
     "FirstName": "Ophelia",
     "LastName": "Nathan",
     "HairColor": "Black",
-    "EyeColor": "Brown",
+    "EyeColor": "Green",
     "Age": 50,
     "Weight": 106,
     "Height": 172,
@@ -143,7 +143,7 @@
     "FirstName": "Arley",
     "LastName": "Vaughn",
     "HairColor": "Black",
-    "EyeColor": "Brown",
+    "EyeColor": "Hazel",
     "Age": 33,
     "Weight": 55.4,
     "Height": 171,
@@ -191,6 +191,36 @@
     "EyeColor": "Hazel",
     "Age": 17,
     "Weight": 100,
+    "Height": 170,
+    "Sex": "M"
+  },
+  {
+    "JobTitle": {
+      "JobTitle": "Cook",
+      "Salary": 23000
+    },
+    "Id": 17,
+    "FirstName": "John",
+    "LastName": "Slung",
+    "HairColor": "Bald",
+    "EyeColor": "Red",
+    "Age": 19,
+    "Weight": 70,
+    "Height": 170,
+    "Sex": "M"
+  },
+  {
+    "JobTitle": {
+      "JobTitle": "Cook",
+      "Salary": 30000
+    },
+    "Id": 18,
+    "FirstName": "Kim",
+    "LastName": "Red",
+    "HairColor": "Bald",
+    "EyeColor": "Green",
+    "Age": 30,
+    "Weight": 79,
     "Height": 170,
     "Sex": "M"
   }
