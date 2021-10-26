@@ -12,29 +12,37 @@
 <h3>Charts</h3>
 <hr/>
 
-<div class="row">
-    <div class="col-6">
-        <div>
-            <Chart Config="pieGenderConfig"/>
+@if (_pieGenderConfig == null || _pieEyeColorConfig == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <div class="row">
+        <div class="col-6">
+            <div>
+                <Chart Config="_pieGenderConfig"/>
+            </div>
+        </div>
+        <div class="col-6">
+            <div>
+                <Chart Config="_pieEyeColorConfig"/>
+            </div>
         </div>
     </div>
-    <div class="col-6">
-        <div>
-            <Chart Config="pieEyeColorConfig"/>
-        </div>
-    </div>
-</div>
-
+}
 
 
 @code {
-    private PieConfig pieGenderConfig;
-    private PieConfig pieEyeColorConfig;
+    private PieConfig _pieGenderConfig;
+    private PieConfig _pieEyeColorConfig;
 
-    private IList<Adult> allAdults;
+    private IList<Adult> _allAdults;
 
-    private int NumberOfFemale => allAdults.Count(adult => adult.Sex.Equals("F"));
-    private int NumberOfMale => allAdults.Count - NumberOfFemale;
+    private int NumberOfFemale => _allAdults.Count(adult => adult.Sex.Equals("F"));
+    private int NumberOfMale => _allAdults.Count - NumberOfFemale;
 
     private int[] EyeColorNumbers
     {
@@ -42,27 +50,34 @@
         {
             return new[]
             {
-                allAdults.Count(adult => adult.EyeColor.Equals("Amber")),
-                allAdults.Count(adult => adult.EyeColor.Equals("Blue")),
-                allAdults.Count(adult => adult.EyeColor.Equals("Brown")),
-                allAdults.Count(adult => adult.EyeColor.Equals("Gray")),
-                allAdults.Count(adult => adult.EyeColor.Equals("Green")),
-                allAdults.Count(adult => adult.EyeColor.Equals("Hazel")),
-                allAdults.Count(adult => adult.EyeColor.Equals("Red")),
+                _allAdults.Count(adult => adult.EyeColor.Equals("Amber")),
+                _allAdults.Count(adult => adult.EyeColor.Equals("Blue")),
+                _allAdults.Count(adult => adult.EyeColor.Equals("Brown")),
+                _allAdults.Count(adult => adult.EyeColor.Equals("Gray")),
+                _allAdults.Count(adult => adult.EyeColor.Equals("Green")),
+                _allAdults.Count(adult => adult.EyeColor.Equals("Hazel")),
+                _allAdults.Count(adult => adult.EyeColor.Equals("Red")),
             };
         }
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        allAdults = AdultService.ReadAll();
-        ConfigureGenderPieConfig();
-        ConfigureEyeColorPieConfig();
+        try
+        {
+            _allAdults = await AdultService.ReadAllAsync();
+            ConfigureGenderPieConfig();
+            ConfigureEyeColorPieConfig();
+        }
+        catch (Exception e)
+        {
+    // update some error label here, or show popup..
+        }
     }
 
     private void ConfigureGenderPieConfig()
     {
-        pieGenderConfig = new PieConfig
+        _pieGenderConfig = new PieConfig
         {
             Options = new PieOptions
             {
@@ -74,8 +89,8 @@
                 }
             }
         };
-        pieGenderConfig.Data.Labels.Add("Male");
-        pieGenderConfig.Data.Labels.Add("Female");
+        _pieGenderConfig.Data.Labels.Add("Male");
+        _pieGenderConfig.Data.Labels.Add("Female");
 
         PieDataset<int> dataset = new(new[] {NumberOfMale, NumberOfFemale})
         {
@@ -85,12 +100,12 @@
                 ColorUtil.ColorHexString(169, 63, 117)
             }
         };
-        pieGenderConfig.Data.Datasets.Add(dataset);
+        _pieGenderConfig.Data.Datasets.Add(dataset);
     }
 
     private void ConfigureEyeColorPieConfig()
     {
-        pieEyeColorConfig = new PieConfig
+        _pieEyeColorConfig = new PieConfig
         {
             Options = new PieOptions
             {
@@ -104,7 +119,7 @@
         };
         foreach (var color in new[] {"Amber", "Blue", "Brown", "Gray", "Green", "Hazel", "Red"})
         {
-            pieEyeColorConfig.Data.Labels.Add(color);
+            _pieEyeColorConfig.Data.Labels.Add(color);
         }
 
         PieDataset<int> dataset = new(EyeColorNumbers)
@@ -120,6 +135,6 @@
                 ColorUtil.ColorHexString(221, 17, 85)
             }
         };
-        pieEyeColorConfig.Data.Datasets.Add(dataset);
+        _pieEyeColorConfig.Data.Datasets.Add(dataset);
     }
 }

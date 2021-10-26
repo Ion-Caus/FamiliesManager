@@ -22,17 +22,22 @@
         HairColor = "Brown"
     };
 
-    private Job Job = new();
-
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        newAdult.JobTitle = Job;
+        newAdult.JobTitle = new Job();
     }
 
-    private void AddNewAdult()
+    private async Task AddNewAdult()
     {
-        AdultService.Create(newAdult);
-        NavigationManager.NavigateTo("/adults");
+        try
+        {
+            await AdultService.CreateAsync(newAdult);
+            NavigationManager.NavigateTo("/adults");
+        }
+        catch (Exception e)
+        {
+    // update some error label here, or show popup..
+        }
     }
 
 }

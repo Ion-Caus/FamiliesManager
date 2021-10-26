@@ -24,13 +24,13 @@
     </div>
 </div>
 
-@if (shownAdults == null)
+@if (_shownAdults == null)
 {
     <p>
         <em>Loading...</em>
     </p>
 }
-else if (!shownAdults.Any())
+else if (!_shownAdults.Any())
 {
     <p>
         <em>List is empty. Please add some data.</em>
@@ -39,7 +39,7 @@ else if (!shownAdults.Any())
 else
 {
     <div class="row">
-        @foreach (var adult in shownAdults)
+        @foreach (var adult in _shownAdults)
         {
             <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
                 <div class="card text-center">
@@ -89,24 +89,25 @@ else
 }
 
 @code {
-    private IList<Adult> allAdults;
-    private IList<Adult> shownAdults;
+    private IList<Adult> _allAdults;
+    private IList<Adult> _shownAdults;
 
 
-    private int? filterById;
-    private string filterByName;
-    private string filterByJobTitle;
+    private int? _filterById;
+    private string _filterByName;
+    private string _filterByJobTitle;
 
     private void FilterById(ChangeEventArgs evt)
     {
-        filterById = null;
+        _filterById = null;
         try
         {
             if (evt.Value != null)
-                filterById = int.Parse(evt.Value.ToString() ?? string.Empty);
+                _filterById = int.Parse(evt.Value.ToString() ?? string.Empty);
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            // ignored
         }
 
         ExecuteFilter();
@@ -114,10 +115,10 @@ else
 
     private void FilterByName(ChangeEventArgs evt)
     {
-        filterByName = null;
+        _filterByName = null;
         if (evt.Value != null && evt.Value?.ToString() != "")
         {
-            filterByName = evt.Value?.ToString();
+            _filterByName = evt.Value?.ToString();
         }
 
         ExecuteFilter();
@@ -125,30 +126,37 @@ else
 
     private void FilterByJobTitle(ChangeEventArgs evt)
     {
-        filterByJobTitle = null;
+        _filterByJobTitle = null;
         if (evt.Value != null && evt.Value?.ToString() != "")
         {
-            filterByJobTitle = evt.Value?.ToString();
+            _filterByJobTitle = evt.Value?.ToString();
         }
-        Console.WriteLine(filterByJobTitle);
+        Console.WriteLine(_filterByJobTitle);
         ExecuteFilter();
     }
 
     private void ExecuteFilter()
     {
-        shownAdults = allAdults.Where(adult =>
-            (filterById != null && adult.Id == filterById || filterById == null) &&
-            (filterByName != null && (adult.LastName.ToLower().StartsWith(filterByName.ToLower()) || adult.FirstName.ToLower().StartsWith(filterByName.ToLower())) || filterByName == null) &&
-            (filterByJobTitle != null && adult.JobTitle.JobTitle.ToLower().StartsWith(filterByJobTitle.ToLower()) || filterByJobTitle == null)
+        _shownAdults = _allAdults.Where(adult =>
+            (_filterById != null && adult.Id == _filterById || _filterById == null) &&
+            (_filterByName != null && (adult.LastName.ToLower().StartsWith(_filterByName.ToLower()) || adult.FirstName.ToLower().StartsWith(_filterByName.ToLower())) || _filterByName == null) &&
+            (_filterByJobTitle != null && adult.JobTitle.JobTitle.ToLower().StartsWith(_filterByJobTitle.ToLower()) || _filterByJobTitle == null)
             ).ToList();
     }
 
-    private void Remove(int id)
+    private async Task Remove(int id)
     {
-        Adult toRemove = allAdults.First(ad => ad.Id == id);
-        allAdults.Remove(toRemove);
-        shownAdults.Remove(toRemove);
-        AdultService.Delete(id);
+        try
+        {
+            Adult toRemove = _allAdults.First(ad => ad.Id == id);
+            _allAdults.Remove(toRemove);
+            _shownAdults.Remove(toRemove);
+            await AdultService.DeleteAsync(id);
+        }
+        catch (Exception e)
+        {
+    // update some error label here, or show popup..
+        }
     }
 
     private void Edit(int id)
@@ -158,8 +166,15 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        allAdults = AdultService.ReadAll();
-        shownAdults = allAdults;
+        try
+        {
+            _allAdults = await AdultService.ReadAllAsync();
+            _shownAdults = _allAdults;
+        }
+        catch (Exception e)
+        {
+    // update some error label here, or show popup..
+        }
     }
 
 }

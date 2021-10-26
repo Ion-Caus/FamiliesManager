@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using FamiliesManager.Models;
+using FamilyManager_WebApi.Models;
 
-namespace FamiliesManager.Data
+namespace FamilyManager_WebApi.Data
 {
     public class InMemoryUserService : IUserService
     {

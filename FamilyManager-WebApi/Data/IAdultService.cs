@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FamiliesManager.Models;
+using FamilyManager_WebApi.Models;
 
-namespace FamiliesManager.Data
+namespace FamilyManager_WebApi.Data
 {
     public interface IAdultService
     {
-        Task CreateAsync(Adult adult);
+        Task<Adult> CreateAsync(Adult adult);
         Task<Adult> ReadAsync(int id);
         Task<IList<Adult>> ReadAllAsync();
-        Task UpdateAsync(Adult adult);
+        Task<Adult> UpdateAsync(Adult adult);
         Task DeleteAsync(int id);
     }
 }

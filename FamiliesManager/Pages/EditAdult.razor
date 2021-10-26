@@ -7,16 +7,16 @@
 @inject IAdultService AdultService
 @inject NavigationManager NavigationManager
 
-@if (adultToEdit == null)
+@if (_adultToEdit == null)
 {
     <em>Adult not found!</em>
 }
 else
 {
-    <h3>Editing infomration about @adultToEdit.FirstName @adultToEdit.LastName</h3>
+    <h3>Editing infomration about @_adultToEdit.FirstName @_adultToEdit.LastName</h3>
     <hr/>
 
-    <AdultForm Adult="@adultToEdit" 
+    <AdultForm Adult="@_adultToEdit" 
                SubmitHandler="@SaveChanges"/>
 }
 
@@ -25,17 +25,31 @@ else
     [Parameter]
     public int Id { get; set; }
 
-    private Adult adultToEdit;
+    private Adult _adultToEdit;
 
     protected override async Task OnInitializedAsync()
     {
-        adultToEdit = AdultService.Read(Id);
+        try
+        {
+            _adultToEdit = await AdultService.ReadAsync(Id);
+        }
+        catch (Exception e)
+        {
+    // update some error label here, or show popup..
+        }
     }
 
-    private void SaveChanges()
+    private async void SaveChanges()
     {
-        AdultService.Update(adultToEdit);
-        NavigationManager.NavigateTo("/adults");
+        try
+        {
+            await AdultService.UpdateAsync(_adultToEdit);
+            NavigationManager.NavigateTo("/adults");
+        }
+        catch (Exception e)
+        {
+    // update some error label here, or show popup..
+        }
     }
 
 }
