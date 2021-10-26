@@ -86,9 +86,18 @@ else
             </div>
         }
     </div>
+    
+    @if (_errorMessage != "")
+    {
+        <div class="alert alert-primary" role="alert">
+            @_errorMessage
+        </div>
+    }
 }
 
 @code {
+    private string _errorMessage;
+    
     private IList<Adult> _allAdults;
     private IList<Adult> _shownAdults;
 
@@ -104,10 +113,11 @@ else
         {
             if (evt.Value != null)
                 _filterById = int.Parse(evt.Value.ToString() ?? string.Empty);
+            _errorMessage = "";
         }
         catch (Exception e)
         {
-            // ignored
+            _errorMessage = e.Message;
         }
 
         ExecuteFilter();
@@ -152,10 +162,11 @@ else
             _allAdults.Remove(toRemove);
             _shownAdults.Remove(toRemove);
             await AdultService.DeleteAsync(id);
+            _errorMessage = "";
         }
         catch (Exception e)
         {
-    // update some error label here, or show popup..
+            _errorMessage = e.Message;
         }
     }
 
@@ -170,10 +181,11 @@ else
         {
             _allAdults = await AdultService.ReadAllAsync();
             _shownAdults = _allAdults;
+            _errorMessage = "";
         }
         catch (Exception e)
         {
-    // update some error label here, or show popup..
+            _errorMessage = e.Message;
         }
     }
 

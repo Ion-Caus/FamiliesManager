@@ -11,11 +11,19 @@
 <h3>Add new adult</h3>
 <hr/>
 
-<AdultForm Adult="@newAdult" SubmitHandler="AddNewAdult"/>
+<AdultForm Adult="@_newAdult" SubmitHandler="AddNewAdult"/>
+
+@if (_errorMessage != "")
+{
+    <div class="alert alert-primary" role="alert">
+        @_errorMessage
+    </div>
+}
 
 @code {
+    private string _errorMessage;
 
-    private Adult newAdult = new()
+    private readonly Adult _newAdult = new()
     {
         Sex = "M",
         EyeColor = "Brown",
@@ -24,19 +32,21 @@
 
     protected override void OnInitialized()
     {
-        newAdult.JobTitle = new Job();
+        _newAdult.JobTitle = new Job();
+        _errorMessage = "";
     }
 
     private async Task AddNewAdult()
     {
         try
         {
-            await AdultService.CreateAsync(newAdult);
+            await AdultService.CreateAsync(_newAdult);
             NavigationManager.NavigateTo("/adults");
+            _errorMessage = "";
         }
         catch (Exception e)
         {
-    // update some error label here, or show popup..
+            _errorMessage = e.Message;
         }
     }
 

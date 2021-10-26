@@ -25,9 +25,8 @@ namespace FamiliesManager
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<FileContext>();
             services.AddSingleton<IAdultService, CloudAdultService>();
-            services.AddScoped<IUserService, InMemoryUserService>();
+            services.AddScoped<IUserService, CloudUserService>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 
             services.AddAuthorization(option =>

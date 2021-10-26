@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using FamilyManager_WebApi.Models;
 
 namespace FamilyManager_WebApi.Data
 {
-    public class InMemoryUserService : IUserService
+    public class JsonUserService : IUserService
     {
         private List<User> _users;
         private readonly string _usersFile = "users.json";
         
-        public InMemoryUserService()
+        public JsonUserService()
         {
             if (!File.Exists(_usersFile))
             {
@@ -29,7 +30,10 @@ namespace FamilyManager_WebApi.Data
         
         private void WriteUsersToJson()
         {
-            string todosAsJson = JsonSerializer.Serialize(_users);
+            string todosAsJson = JsonSerializer.Serialize(_users, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
             File.WriteAllText(_usersFile, todosAsJson);
         }
 
@@ -58,19 +62,8 @@ namespace FamilyManager_WebApi.Data
             };
             _users = defaultUsers.ToList();
         }
-        
 
-        public bool ValidUsername(string username)
-        {
-            User first = _users.FirstOrDefault(user => user.Username.Equals(username));
-            if (first != null)
-            {
-                throw new Exception("Username already taken.");
-            }
-            return true;
-        }
-
-        public User ValidateUser(string username, string password)
+        public async Task<User> ValidateUserAsync(string username, string password)
         {
             User first = _users.FirstOrDefault(user => user.Username.Equals(username));
 

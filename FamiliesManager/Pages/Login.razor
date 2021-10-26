@@ -39,7 +39,7 @@
         try
         {
             //Todo ValidateLogin --> GetUser and Validate Async
-            ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(_username, _password);
+            await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateLoginAsync(_username, _password);
             _username = "";
             _password = "";
             NavigationManager.NavigateTo("/");
@@ -57,12 +57,13 @@
         _password = "";
         try
         {
-            ((CustomAuthenticationStateProvider) AuthenticationStateProvider).Logout();
+            await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).LogoutAsync();
             NavigationManager.NavigateTo("/");
+            _errorMessage = "";
         }
-        catch (Exception)
+        catch (Exception e)
         {
-    // ignored
+            _errorMessage = e.Message;
         }
     }
 

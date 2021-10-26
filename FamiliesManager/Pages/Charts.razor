@@ -32,10 +32,19 @@ else
             </div>
         </div>
     </div>
+    
+    @if (_errorMessage != "")
+    {
+        <div class="alert alert-primary" role="alert">
+            @_errorMessage
+        </div>
+    }
 }
 
 
 @code {
+    private string _errorMessage;
+    
     private PieConfig _pieGenderConfig;
     private PieConfig _pieEyeColorConfig;
 
@@ -68,10 +77,11 @@ else
             _allAdults = await AdultService.ReadAllAsync();
             ConfigureGenderPieConfig();
             ConfigureEyeColorPieConfig();
+            _errorMessage = "";
         }
         catch (Exception e)
         {
-    // update some error label here, or show popup..
+            _errorMessage = e.Message;
         }
     }
 

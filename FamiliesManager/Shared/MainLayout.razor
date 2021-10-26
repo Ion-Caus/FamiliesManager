@@ -52,7 +52,7 @@
     {
         try
         {
-            ((CustomAuthenticationStateProvider) AuthenticationStateProvider).Logout();
+            await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).LogoutAsync();
             NavigationManager.NavigateTo("/Login");
         }
         catch (Exception)

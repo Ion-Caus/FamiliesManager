@@ -1,10 +1,10 @@
+using System.Threading.Tasks;
 using FamilyManager_WebApi.Models;
 
 namespace FamilyManager_WebApi.Data
 {
     public interface IUserService
     {
-        bool ValidUsername(string username);
-        User ValidateUser(string username, string password);
+        Task<User> ValidateUserAsync(string username, string password);
     }
 }

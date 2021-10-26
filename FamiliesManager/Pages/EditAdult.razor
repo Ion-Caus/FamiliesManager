@@ -18,6 +18,13 @@ else
 
     <AdultForm Adult="@_adultToEdit" 
                SubmitHandler="@SaveChanges"/>
+    
+    @if (_errorMessage != "")
+    {
+        <div class="alert alert-primary" role="alert">
+            @_errorMessage
+        </div>
+    }
 }
 
 @code {
@@ -26,16 +33,18 @@ else
     public int Id { get; set; }
 
     private Adult _adultToEdit;
+    private string _errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             _adultToEdit = await AdultService.ReadAsync(Id);
+            _errorMessage = "";
         }
         catch (Exception e)
         {
-    // update some error label here, or show popup..
+            _errorMessage = e.Message;
         }
     }
 
@@ -45,10 +54,11 @@ else
         {
             await AdultService.UpdateAsync(_adultToEdit);
             NavigationManager.NavigateTo("/adults");
+            _errorMessage = "";
         }
         catch (Exception e)
         {
-    // update some error label here, or show popup..
+            _errorMessage = e.Message;
         }
     }
 

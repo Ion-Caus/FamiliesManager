@@ -7,6 +7,7 @@ using FamiliesManager.Data;
 using FamiliesManager.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
+using Microsoft.VisualBasic;
 
 namespace FamiliesManager.Authentication
 {
@@ -31,7 +32,7 @@ namespace FamiliesManager.Authentication
                 if (!string.IsNullOrEmpty(userJson))
                 {
                     User tmp = JsonSerializer.Deserialize<User>(userJson);
-                    ValidateLogin(tmp?.Username, tmp?.Password);
+                    await ValidateLoginAsync(tmp?.Username, tmp?.Password);
                 }
             }
             else
@@ -43,7 +44,7 @@ namespace FamiliesManager.Authentication
             return await Task.FromResult(new AuthenticationState(cachedClaimsPrincipal));
         }
 
-        public void ValidateLogin(string username, string password)
+        public async Task ValidateLoginAsync(string username, string password)
         {
             if (string.IsNullOrEmpty(username)) throw new Exception("Enter username");
             if (string.IsNullOrEmpty(password)) throw new Exception("Enter password");
@@ -51,10 +52,10 @@ namespace FamiliesManager.Authentication
             ClaimsIdentity identity;
             try
             {
-                User user = userService.ValidateUser(username, password);
+                User user = await userService.ValidateUserAsync(username, password);
                 identity = SetupClaimsForUser(user);
                 string serialisedData = JsonSerializer.Serialize(user);
-                jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", serialisedData);
+                await jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", serialisedData);
                 cachedUser = user;
             }
             catch
@@ -66,10 +67,10 @@ namespace FamiliesManager.Authentication
                 Task.FromResult(new AuthenticationState(new ClaimsPrincipal(identity))));
         }
 
-        public void Logout()
+        public async Task LogoutAsync()
         {
             cachedUser = null;
-            jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", "");
+            await jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", "");
             NotifyAuthenticationStateChanged(
                 Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity())))
             );

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using FamiliesManager.Models;
 
 namespace FamiliesManager.Data
@@ -58,19 +59,8 @@ namespace FamiliesManager.Data
             };
             _users = defaultUsers.ToList();
         }
-        
 
-        public bool ValidUsername(string username)
-        {
-            User first = _users.FirstOrDefault(user => user.Username.Equals(username));
-            if (first != null)
-            {
-                throw new Exception("Username already taken.");
-            }
-            return true;
-        }
-
-        public User ValidateUser(string username, string password)
+        public async Task<User> ValidateUserAsync(string username, string password)
         {
             User first = _users.FirstOrDefault(user => user.Username.Equals(username));
 

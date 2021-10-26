@@ -35,6 +35,7 @@ namespace FamilyManager_WebApi
             });
             services.AddSingleton<FileContext>();
             services.AddSingleton<IAdultService, AdultService>();
+            services.AddSingleton<IUserService, JsonUserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
