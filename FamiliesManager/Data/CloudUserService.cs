@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using FamiliesManager.Models;
@@ -19,11 +20,23 @@ namespace FamiliesManager.Data
 
         public async Task<User> ValidateUserAsync(string username, string password)
         {
+            User initUser = new User
+            {
+                Username = username,
+                Password = password
+            };
+            string userAsJson = JsonSerializer.Serialize(initUser);
+            StringContent content = new StringContent(
+                userAsJson,
+                Encoding.UTF8,
+                "application/json"
+            );
+            
             HttpResponseMessage responseMessage = 
-                await _client.GetAsync(Uri + $"/users?username={username}&password={password}");
+                await _client.PostAsync(Uri + "/users", content);
 
-            if (!responseMessage.IsSuccessStatusCode)
-                throw new Exception($"Error: {responseMessage.Content.ReadAsStringAsync().Result}");
+            if (!responseMessage.IsSuccessStatusCode){
+                throw new Exception($"Error: {responseMessage.Content.ReadAsStringAsync().Result}");}
 
             string result = await responseMessage.Content.ReadAsStringAsync();
 

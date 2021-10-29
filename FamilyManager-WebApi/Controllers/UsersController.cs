@@ -18,18 +18,18 @@ namespace FamilyManager_WebApi.Controllers
             _userService = userService;
         }
         
-        [HttpGet]
-        public async Task<ActionResult<User>> GetUser([FromQuery] string username, [FromQuery] string password)
+        [HttpPost]
+        public async Task<ActionResult<User>> ValidateUser([FromBody] User user)
         {
             try
             {
-                User user = await _userService.ValidateUserAsync(username, password);
-                return Ok(user);
+                User responseUser = await _userService.ValidateUserAsync(user.Username, user.Password);
+                return Ok(responseUser);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return StatusCode(500, e.Message);
+                return NotFound(e.Message);
             }
         }
     }
