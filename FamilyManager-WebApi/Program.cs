@@ -23,10 +23,10 @@ namespace FamilyManager_WebApi
                     SeedAdults(dbContext);
                 }
                 
-                // if (!dbContext.Users.Any())
-                // {
-                //     SeedUsers(dbContext);
-                // }
+                if (!dbContext.Users.Any())
+                {
+                    SeedUsers(dbContext);
+                }
             }
 
             CreateHostBuilder(args).Build().Run();

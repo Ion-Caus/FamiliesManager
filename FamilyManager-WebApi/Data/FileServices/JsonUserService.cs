@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using FamilyManager_WebApi.Models;
 
-namespace FamilyManager_WebApi.Data
+namespace FamilyManager_WebApi.Data.FileServices
 {
     public class JsonUserService : IUserService
     {

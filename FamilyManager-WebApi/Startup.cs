@@ -34,10 +34,9 @@ namespace FamilyManager_WebApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "FamilyManager_WebApi", Version = "v1"});
             });
-            services.AddSingleton<FileContext>();
             services.AddDbContext<AdultDbContext>();
             services.AddScoped<IAdultService, AdultRepo>();
-            services.AddScoped<IUserService, JsonUserService>();
+            services.AddScoped<IUserService, UserRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

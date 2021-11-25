@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using FamilyManager_WebApi.Models;
 using FamilyManager_WebApi.Persistence;
 
-namespace FamilyManager_WebApi.Data
+namespace FamilyManager_WebApi.Data.FileServices
 {
     public class AdultService : IAdultService
     {
