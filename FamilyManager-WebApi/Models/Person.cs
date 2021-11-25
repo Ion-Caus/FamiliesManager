@@ -4,6 +4,7 @@ namespace FamilyManager_WebApi.Models
 {
     public class Person
     {
+        [Key]
         [Required]
         public int Id { get; set; }
         

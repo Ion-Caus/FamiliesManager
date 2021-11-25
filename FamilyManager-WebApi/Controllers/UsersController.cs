@@ -28,7 +28,6 @@ namespace FamilyManager_WebApi.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
                 return NotFound(e.Message);
             }
         }
